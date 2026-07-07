@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>django-garmin demo</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 3rem auto; padding: 0 1rem; line-height: 1.5; }
+    h1 { font-size: 1.5rem; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 6px; }
+    .row.connected { border-color: #2a7; background: #f4fbf6; }
+    .row.disconnected { border-color: #c84; background: #fff8f0; }
+    button, a.button { display: inline-block; padding: 0.5rem 1rem; border: 1px solid #333; background: #333; color: white; text-decoration: none; border-radius: 4px; cursor: pointer; }
+    .messages { padding: 0; list-style: none; }
+    .messages li { padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 0.5rem; }
+    .messages li.success { background: #e9f7ed; }
+    .messages li.error { background: #fdecea; }
+    nav { font-size: 0.875rem; color: #555; }
+    nav a { color: #555; }
+    code { background: #f3f3f3; padding: 0.1rem 0.3rem; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <nav>
+    Signed in as <strong>{{ request.user.username }}</strong> ·
+    <a href="/admin/">admin</a> ·
+    <form action="{% url 'logout' %}" method="post" style="display:inline">{% csrf_token %}<button style="background:none;border:none;color:#555;padding:0;cursor:pointer;text-decoration:underline">sign out</button></form>
+  </nav>
+
+  <h1>django-garmin demo</h1>
+
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}<li class="{{ message.tags }}">{{ message }}</li>{% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if connection and connection.status == 'active' %}
+    <div class="row connected">
+      <div>
+        <strong>Garmin connected</strong><br />
+        <small>
+          Garmin user ID: <code>{{ connection.garmin_user_id }}</code><br />
+          Status: {{ connection.status }} ·
+          Token: {% if connection.is_token_expired %}<strong style="color:#a00">expired</strong>{% else %}valid{% endif %}
+          (expires {{ connection.token_expires_at }}) ·
+          Last sync: {{ connection.last_sync_at|default:"never" }}
+        </small>
+      </div>
+      <form action="{% url 'demo-sync' %}" method="post" style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+        {% csrf_token %}
+        <label>
+          days
+          <input type="number" name="days" value="1" min="1" max="90" style="width:4rem" />
+        </label>
+        <button type="submit">Sync now</button>
+      </form>
+    </div>
+    <div class="row">
+      <div>
+        <small>Garmin's pull endpoints filter by <em>upload</em> time — a sync
+          window covers whatever your devices synced to Garmin Connect during it,
+          not the days the data was recorded. Sync your watch in the Garmin
+          Connect app first, then sync here.</small>
+      </div>
+    </div>
+    {% if connection.is_token_expired %}
+    <div class="row disconnected">
+      <div>
+        <strong>Access token expired.</strong><br />
+        <small>A sync will try to refresh it; if the refresh token is also expired
+          (Garmin refresh tokens last ~90 days), re-authorize to mint a new one.</small>
+      </div>
+      <a class="button" href="{% url 'garmin:connect' %}">Re-authorize</a>
+    </div>
+    {% endif %}
+    <div class="row">
+      <div>
+        <strong>{{ record_count }}</strong> record(s) ·
+        <strong>{{ workout_count }}</strong> workout(s) in healthdatamodel
+      </div>
+      <a class="button" href="/admin/healthdatamodel/record/">Browse records</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-top:1rem">
+      <a class="button" href="{% url 'garmin:connect' %}">Re-authorize</a>
+      <form action="{% url 'garmin:disconnect' %}" method="post" style="margin:0">
+        {% csrf_token %}
+        <button type="submit" style="background:#fff;color:#a00;border-color:#a00">Disconnect</button>
+      </form>
+    </div>
+  {% else %}
+    <div class="row disconnected">
+      <div>
+        {% if connection %}
+          <strong>Garmin {{ connection.status }}.</strong><br />
+          <small>This connection can no longer sync. Re-authorize to resume.</small>
+        {% else %}
+          <strong>Not connected to Garmin.</strong><br />
+          <small>You'll be sent to Garmin Connect for consent, then back here.</small>
+        {% endif %}
+      </div>
+      <a class="button" href="{% url 'garmin:connect' %}">{% if connection %}Re-authorize{% else %}Connect Garmin{% endif %}</a>
+    </div>
+  {% endif %}
+</body>
+</html>

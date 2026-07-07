@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-garmin"
+version = "0.1.0"
+description = "A Django app for the Garmin Health API (Garmin Connect Developer Program), backed by django-healthdatamodel."
+readme = "README.md"
+authors = [
+    { name = "Andy Reagan", email = "andy@andyreagan.com" },
+]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 5.0",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "django",
+    "django-healthdatamodel>=0.6.0",
+    "httpx",
+    "pydantic>=2",
+]
+
+[project.urls]
+Homepage = "https://github.com/django-health/django-garmin"
+Repository = "https://github.com/django-health/django-garmin"
+Issues = "https://github.com/django-health/django-garmin/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["garmin"]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-django",
+    "respx",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+markers = [
+    "live: requires real Garmin OAuth credentials in env (GARMIN_TEST_*)",
+]
