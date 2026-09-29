@@ -55,3 +55,8 @@ DJANGO_SETTINGS_MODULE = "tests.settings"
 markers = [
     "live: requires real Garmin OAuth credentials in env (GARMIN_TEST_*)",
 ]
+
+[tool.ruff.lint]
+# Pin to the pre-ruff-0.16 default rule set. Ruff 0.16 expanded its defaults
+# from ~60 to ~400 rules; opting into the wider set is a separate decision.
+select = ["E4", "E7", "E9", "F"]
