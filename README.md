@@ -31,8 +31,8 @@ The model uses `settings.AUTH_USER_MODEL` so it works with any custom user model
 ## Configuration
 
 ```python
-GARMIN_CLIENT_ID = "..."       # consumer key from the Garmin developer portal
-GARMIN_CLIENT_SECRET = "..."   # consumer secret
+GARMIN_CLIENT_ID = "..."  # consumer key from the Garmin developer portal
+GARMIN_CLIENT_SECRET = "..."  # consumer secret
 GARMIN_REDIRECT_URI = "https://your-app.example.com/garmin/callback/"
 ```
 
@@ -66,6 +66,7 @@ Garmin delivers data two ways; this package supports both.
 from django.dispatch import receiver
 from garmin.signals import notification_received
 from garmin.webhooks import process_notification
+
 
 @receiver(notification_received)
 def on_notification(sender, payload, **kwargs):

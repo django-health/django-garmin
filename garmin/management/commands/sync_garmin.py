@@ -118,7 +118,7 @@ class Command(BaseCommand):
                     end=end,
                     summary_types=summary_types,
                 )
-            except Exception:  # noqa: BLE001 — log + continue is the contract
+            except Exception:
                 log.exception("sync failed for %s", label)
                 failures += 1
                 self.stderr.write(self.style.ERROR(f"  ✗ {label}: failed (see logs)"))

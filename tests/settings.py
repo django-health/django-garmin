@@ -1,6 +1,6 @@
 """Minimal Django settings for pytest-django."""
 
-SECRET_KEY = "test-secret-key"  # noqa: S105
+SECRET_KEY = "test-secret-key"
 DEBUG = False
 
 INSTALLED_APPS = [
@@ -48,5 +48,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 USE_TZ = True
 
 GARMIN_CLIENT_ID = "test-client-id"
-GARMIN_CLIENT_SECRET = "test-client-secret"  # noqa: S105
+GARMIN_CLIENT_SECRET = "test-client-secret"
 GARMIN_REDIRECT_URI = "http://testserver/garmin/callback/"
