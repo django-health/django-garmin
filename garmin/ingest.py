@@ -28,9 +28,10 @@ The high-level orchestrator is :func:`sync_user`.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 from healthdatamodel.constants import DataSource
 from healthdatamodel.ingest import ingest_records, ingest_workouts

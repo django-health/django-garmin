@@ -26,8 +26,8 @@ from datetime import datetime, timezone
 from typing import Any
 
 from .client import GarminClient
-from .ingest import RECORD_MAPPERS, ingest_summaries
 from .constants import SUMMARY_ACTIVITIES
+from .ingest import RECORD_MAPPERS, ingest_summaries
 from .models import GarminConnection
 
 log = logging.getLogger(__name__)
